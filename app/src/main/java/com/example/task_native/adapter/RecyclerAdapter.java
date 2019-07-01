@@ -81,7 +81,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.viewHo
         repository = repositoryArrayList.get(i);
         if(viewHolder.binding2 == null){
             viewHolder.binding.setRepo(repositoryArrayList.get(i));
-            viewHolder.binding.setViewmodel(new RepositoryViewModel(context , null));
+            viewHolder.binding.setViewmodel(new RepositoryViewModel(context , null , 0));
 
 
         }

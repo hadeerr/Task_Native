@@ -110,4 +110,8 @@ public class Repository implements Parcelable {
             return new Repository[size];
         }
     };
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
 }

@@ -41,7 +41,7 @@
             android:layout_marginTop="40dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:text="@{repomodel.full_name}"
+            android:text="@{`repo name : `+repomodel.full_name}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/circleImageView" />
@@ -55,7 +55,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:text="@{repomodel.owner.name}"
+            android:text="@{`username : `+repomodel.owner.name}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -69,7 +69,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:text="@{repomodel.fork_count}"
+            android:text="@{`fork_count  : `+repomodel.fork_count}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView3" />
@@ -83,7 +83,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:text="@{repomodel.language}"
+            android:text="@{`language :  `+repomodel.language}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView4" />
@@ -97,10 +97,11 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:text="@{repomodel.default_branch}"
+            android:text="@{`default branch : `+repomodel.default_branch}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
 
     </android.support.constraint.ConstraintLayout>
 </layout>

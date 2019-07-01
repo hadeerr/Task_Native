@@ -7,12 +7,15 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Toast;
+
 import com.example.task_native.R;
 import com.example.task_native.adapter.RecyclerAdapter;
 import com.example.task_native.databinding.ActivityMainBinding;
 import com.example.task_native.model.AppDatabase;
 import com.example.task_native.model.Repository;
 import com.example.task_native.model.ReturnedObject;
+import com.example.task_native.model.User;
 import com.example.task_native.remote.ApiClient;
 import com.example.task_native.remote.ResponseData;
 import com.example.task_native.viewModel.RepositoryViewModel;
@@ -30,6 +33,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
       boolean value;
       AppDatabase database;
     public static int pageNumber=1;
+    public static int number = 1;
+    public static String name ;
 
 
     @Override
@@ -40,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
 
         ButterKnife.bind(this);
         instance = this;
-        viewModel = new RepositoryViewModel(MainActivity.this , this::onLoadMore) ;
+        viewModel = new RepositoryViewModel(MainActivity.this , this::onLoadMore , number) ;
         binding = DataBindingUtil.setContentView(this , R.layout.activity_main);
         binding.setViewmodel(viewModel);
         binding.recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -65,7 +70,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
         return instance;
     }
     public  void setStatus(boolean value2){
-       value = value2;
+        value = value2;
+
         binding.progress.setVisibility((value2)? View.GONE:View.VISIBLE);
 
     }
@@ -94,6 +100,17 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
                             setStatus(true);
                              pageNumber++;
 
+                        }
+
+                        @Override
+                        public void onResponseUserList(List<Repository> repositoryList) {
+
+                        }
+
+                        @Override
+                        public void onError(String message) {
+                            MainActivity.getInstance().setStatus(true);
+                            Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
                         }
 
 

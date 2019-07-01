@@ -14,6 +14,8 @@ public class User implements Parcelable {
     String avatar_url;
     @SerializedName("login")
     String name;
+    @SerializedName("repos_url")
+    String repo_url;
 
 
     public User(int id, String avatar_url, String name) {
@@ -76,4 +78,7 @@ public class User implements Parcelable {
             return new User[size];
         }
     };
+
+
+
 }
