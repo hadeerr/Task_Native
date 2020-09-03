@@ -1,11 +1,22 @@
 package com.example.task_native.view;
+
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
+import android.hardware.SensorManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -19,22 +30,28 @@ import com.example.task_native.model.User;
 import com.example.task_native.remote.ApiClient;
 import com.example.task_native.remote.ResponseData;
 import com.example.task_native.viewModel.RepositoryViewModel;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements RecyclerAdapter.OnLoadMoreListener {
+public class MainActivity extends AppCompatActivity implements RecyclerAdapter.OnLoadMoreListener, LocationListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
 
-
-    RepositoryViewModel  viewModel;
+    RepositoryViewModel viewModel;
     ActivityMainBinding binding;
-   static MainActivity instance;
-      boolean value;
-      AppDatabase database;
-    public static int pageNumber=1;
+    static MainActivity instance;
+    boolean value;
+    AppDatabase database;
+    public static int pageNumber = 1;
     public static int number = 1;
-    public static String name ;
+    public static String name;
+    LocationManager locationManager;
+    GoogleApiClient mGoogleApiClient;
 
 
     @Override
@@ -44,9 +61,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
         database = AppDatabase.getInstance(this);
 
         ButterKnife.bind(this);
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
         instance = this;
-        viewModel = new RepositoryViewModel(MainActivity.this , this::onLoadMore , number) ;
-        binding = DataBindingUtil.setContentView(this , R.layout.activity_main);
+        viewModel = new RepositoryViewModel(MainActivity.this, this::onLoadMore, number);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.setViewmodel(viewModel);
         binding.recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -61,18 +80,39 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
         });
 
 
-
-
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
+       Location location = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+        Log.e("Latitude:" , location.getLatitude() + ", Longitude:" + location.getLongitude());
+        Log.e("Latitude:" , location.getAltitude() +"");
 
     }
 
-    public static MainActivity getInstance(){
+    public static MainActivity getInstance() {
         return instance;
     }
-    public  void setStatus(boolean value2){
+
+    //
+    public void setStatus(boolean value2) {
         value = value2;
 
-        binding.progress.setVisibility((value2)? View.GONE:View.VISIBLE);
+        binding.progress.setVisibility((value2) ? View.GONE : View.VISIBLE);
 
     }
 
@@ -84,11 +124,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
             @Override
             protected List<Repository> doInBackground(Void... voids) {
 
-                int start =  binding.getViewmodel().adapter.getItemCount() - 1;
+                int start = binding.getViewmodel().adapter.getItemCount() - 1;
                 int end = start + 10;
                 final List<Repository>[] list = new List[]{new ArrayList<>()};
 
-                if(end<1000) {
+                if (end < 1000) {
                     ApiClient.getRepoList(100, pageNumber, new ResponseData() {
                         @Override
                         public void onResponse(ReturnedObject object) {
@@ -98,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
                             binding.getViewmodel().adapter.notifyDataSetChanged();
 
                             setStatus(true);
-                             pageNumber++;
+                            pageNumber++;
 
                         }
 
@@ -134,6 +174,43 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
                 binding.getViewmodel().adapter.setMore(true);
             }
         }.execute();
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.e("Latitude:" , location.getLatitude() + ", Longitude:" + location.getLongitude());
+        Log.e("Latitude:" , location.getAltitude() +"");
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
 }
