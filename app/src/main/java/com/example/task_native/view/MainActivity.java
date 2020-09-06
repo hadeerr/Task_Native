@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
         database = AppDatabase.getInstance(this);
         AppCenter.start(getApplication() , "1f7c8b38-74d3-4145-9436-397395e1c00d" , Analytics.class , Crashes.class);
 
-//        ButterKnife.bind(this);
+        ButterKnife.bind(this);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         instance = this;
