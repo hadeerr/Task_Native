@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
 
         instance = this;
         viewModel = new RepositoryViewModel(MainActivity.this, this::onLoadMore, number);
-//        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.setViewmodel(viewModel);
         binding.recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
