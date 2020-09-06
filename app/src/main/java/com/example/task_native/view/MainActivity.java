@@ -36,6 +36,9 @@ import com.google.android.gms.location.LocationServices;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.microsoft.appcenter.AppCenter;
+import com.microsoft.appcenter.analytics.Analytics;
+import com.microsoft.appcenter.crashes.Crashes;
 
 import butterknife.ButterKnife;
 
@@ -59,13 +62,14 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         database = AppDatabase.getInstance(this);
+        AppCenter.start(getApplication() , "1f7c8b38-74d3-4145-9436-397395e1c00d" , Analytics.class , Crashes.class);
 
-        ButterKnife.bind(this);
+//        ButterKnife.bind(this);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         instance = this;
         viewModel = new RepositoryViewModel(MainActivity.this, this::onLoadMore, number);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+//        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.setViewmodel(viewModel);
         binding.recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -80,13 +84,13 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
         });
 
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+      /*     if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                         != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
@@ -100,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
        Location location = LocationServices.FusedLocationApi.getLastLocation(
                 mGoogleApiClient);
         Log.e("Latitude:" , location.getLatitude() + ", Longitude:" + location.getLongitude());
-        Log.e("Latitude:" , location.getAltitude() +"");
+        Log.e("Latitude:" , location.getAltitude() +"");*/
 
     }
 
